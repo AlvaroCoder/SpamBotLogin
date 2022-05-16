@@ -1,18 +1,28 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect } from 'react';
 import { useAuth } from '../Authentication/use-auth';
 import FormValidation from '../Authentication/form-validation';
 import { Navigate } from 'react-router-dom';
 
 function SignUpForm() {
-    const {signUp} = useAuth();
+    const {signUp, isLogin, error } = useAuth();
+    
+    //FakeUser
     const user = {
-        usuario : '',
-        email : '',
-        contraseña : '',
+      nombre : '',
+      email : '',
+      contrasenna : '',
     }
-    const [error, setError] = useState({});
+
     const [inputValues, setInputValues] = useState(user);
-    const [isLogin, setIsLogin] = useState(false);
+    const [data, setData] = useState({});
+
+    useEffect(()=>{
+      let respond = FormValidation(inputValues);
+      if (!respond.message) {
+         signUp(data);
+      }
+    },[data]);
+
     const handleChange = (evt)=>{
         evt.preventDefault();
         const {name, value} = evt.target
@@ -24,11 +34,8 @@ function SignUpForm() {
     const handleSubmit = (evt)=>{
         evt.preventDefault();
         let respond = FormValidation(inputValues);
-        setError(respond)
         if (!respond.message) {
-            signUp(inputValues);
-            setIsLogin(true);
-            console.log(inputValues);
+          setData(inputValues);
         }
     }
     if (isLogin) {
@@ -39,11 +46,12 @@ function SignUpForm() {
             <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8' onSubmit={handleSubmit}>
                 <div className='max-w-md w-full space-y-8'>
                     <h1 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>Inicia sesión</h1>
+                      <p className='text-red-500'>{error ? error.error : ''}</p>
                       <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
                         <div className='rounded-md shadow-sm -space-y-px'>
                                 <div>
                                   <label className='sr-only' htmlFor='usuario' >Ingresa tu usuario </label>
-                                  <input className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'  value={inputValues.usuario} onChange={handleChange} name='usuario' placeholder='Usuario'></input>
+                                  <input className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'  value={inputValues.nombre} onChange={handleChange} name='nombre' placeholder='Usuario'></input>
                                 </div>
                                 <div>
                                   <label className='sr-only' htmlFor='email' >Ingresa tu email   </label>
@@ -51,7 +59,7 @@ function SignUpForm() {
                                 </div>
                                 <div >
                                   <label className='sr-only' >Ingresar tu contraseña :  </label>
-                                  <input className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm' autoComplete='current-password' type='password' value={inputValues.contraseña} onChange={handleChange} name='contraseña' placeholder='Contraseña'></input>  
+                                  <input className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm' autoComplete='current-password' type='password' value={inputValues.contrasenna} onChange={handleChange} name='contrasenna' placeholder='Contraseña'></input>  
                                 </div>              
                             </div>
                             <div className='flex items-center justify-between'>

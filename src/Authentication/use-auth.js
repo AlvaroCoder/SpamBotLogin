@@ -1,24 +1,60 @@
 import { useState,createContext, useContext, useEffect } from "react";
-import axios from 'axios';
 
 const authContex = createContext();
+const API_ROUTE = 'http://localhost:8084/database/author';
 
 export function ProvideAuth({ children }) {
-    
     const auth = useProvideAuth();
     return <authContex.Provider value={auth}>{children}</authContex.Provider>
 }
-function useProvideAuth() {
-    const API_ROUTE = 'http://localhost:8084/database/author/signUp'
-    const [user, setUser] = useState(null);
-    const [isLogin, setIsLogin] = useState(false)
 
-    const signIn = (author)=>{
-        setUser(author)
+function useProvideAuth() {
+    const [user, setUser] = useState({});
+    const [isLogin, setIsLogin] = useState(false);
+    const [error,setError] = useState({});
+
+    const signIn =(author)=>{
+        fetch(API_ROUTE+'/login',{
+            mode : 'cors',
+            method : 'POST',
+            headers : {
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify(author)
+        }).then(async (res)=>{
+            if (res.status>=400) {
+                const err = await res.json()
+                setError(err)
+                return;
+            }
+            return res.json()
+        }).catch((err)=>{
+            console.log(err);
+        }).then((res)=>{
+            setUser(res[0])
+            setIsLogin(true)
+        })
     }
-    const signUp = (author) =>{
-        setIsLogin(true)
-        setUser(author)
+    const signUp= (author) =>{
+        fetch(API_ROUTE+'/signUp',{
+            mode : 'cors',
+            method : 'POST',
+            headers : {
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify(author)
+        }).then(async (res)=>{
+            //return server response as text
+            if (res.status >= 400) {
+                const er = await res.text()
+                setError(JSON.parse(er))
+                return;
+            }
+            setUser(author);
+            setIsLogin(true);
+        }).catch((err)=>{
+            console.log(err);
+        })
     }
     const signOut = ()=>{
         setUser(null)
@@ -29,34 +65,11 @@ function useProvideAuth() {
         isLogin,
         signIn,
         signUp, 
-        signOut
+        signOut,
+        setIsLogin,
+        error
     }
 }
 export const useAuth = ()=>{
     return useContext(authContex);
 }
-
-/*
-const {usuario, email, contraseña} = author
-        const obj_author = {
-            nombre : usuario,
-            email : email,
-            contrasenna : contraseña
-        }
-        console.log(obj_author);
-        axios.post(API_ROUTE, obj_author,{
-            method : 'POST',
-            headers : {
-                "Content-type":'application/json'
-            }
-        }).then((res)=>{
-            setLoading(false)
-            setUser(()=>res.data.author)
-            setIsLogin(true)
-            console.log(res.data);
-            console.log(user);
-        }).catch((err)=>{
-            setLoading(false)
-            setError(err)
-        })
-*/ 
