@@ -4,7 +4,7 @@ import { useAuth } from '../Authentication/use-auth';
 
 function PageProtected() {
     const auth = useAuth();
-    return auth ? <Outlet/> : <Navigate to='/Registrar'></Navigate>
+    return auth.user.email ? <Outlet/> : <Navigate to='/Registrar'></Navigate>
 }
 
 export default PageProtected;

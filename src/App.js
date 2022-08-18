@@ -1,28 +1,29 @@
 import React from 'react'
-import {  Routes, Route } from 'react-router-dom'
+import {  Routes, Route, Navigate } from 'react-router-dom'
 import { ProvideAuth } from './Authentication/use-auth';
-import Author from './Components/Author';
 import Ingresar from './Components/SignInPage';
 import Home from './Components/Home';
-import PageProtected from './Components/PageProtected';
-import Premiun from './Components/Premiun';
 import Registrar from './Components/SignUpPage';
-import Navbar from './Elements/Navbar';
 import UserProtected from './UserProtected';
-
+import {CookiesProvider} from 'react-cookie';
+import { LostPage } from './Elements';
 function App() {
   return (
-    <ProvideAuth>
-        <Navbar></Navbar>
-        <Routes>
-            <Route exact path='/' element={<Home/>}></Route>
-            <Route path='/Ingresar' element={<Ingresar />}></Route>
-            <Route path='/Registrar' element={<Registrar/>}></Route>
-            <Route path='/author/:author' element={<UserProtected>
-            <Author></Author>
-            </UserProtected>}></Route>
-        </Routes> 
-    </ProvideAuth>
+    <CookiesProvider>
+        <ProvideAuth>
+          <Routes>
+            <Route path='/' element={<Navigate to='/Home'></Navigate>}></Route>
+              <Route path='/Ingresar' element={<Ingresar />}></Route>
+              <Route path='/Registrar' element={<Registrar/>}></Route>
+              <Route path='/Home' element={
+                <UserProtected>
+                  <Home></Home>
+                </UserProtected>
+              }></Route>
+              <Route path='*' element={<LostPage/>}></Route>
+          </Routes> 
+      </ProvideAuth>
+    </CookiesProvider>
   )
 }
 

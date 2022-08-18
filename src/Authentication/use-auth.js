@@ -1,27 +1,30 @@
-import { useState,createContext, useContext, useEffect } from "react";
+import { useState,createContext, useContext } from "react";
+import { useCookies } from 'react-cookie';
+import { postConexion } from '../Services/Connection';
 
-const authContex = createContext();
-const API_ROUTE = 'http://localhost:8084/database/author';
+const authContext = createContext();
 
 export function ProvideAuth({ children }) {
     const auth = useProvideAuth();
-    return <authContex.Provider value={auth}>{children}</authContex.Provider>
+    return <authContext.Provider value={auth}>
+            {children}
+        </authContext.Provider>
+}
+function calculateDate() {
+    let dayNow = new Date();
+    dayNow.getDate();
 }
 
 function useProvideAuth() {
-    const [user, setUser] = useState({});
     const [isLogin, setIsLogin] = useState(false);
     const [error,setError] = useState({});
+    const [cookie , setCookie, removeCookie] = useCookies(['Author']);
+    console.log(cookie.Author);
+    const [user, setUser] = useState(cookie.Author);
 
-    const signIn =(author)=>{
-        fetch(API_ROUTE+'/login',{
-            mode : 'cors',
-            method : 'POST',
-            headers : {
-                'Content-Type': 'application/json'
-            },
-            body : JSON.stringify(author)
-        }).then(async (res)=>{
+    let dateExp = new Date(2022,8,18);
+    const signIn = (author)=>{
+        postConexion('/login', author).then(async (res)=>{
             if (res.status>=400) {
                 const err = await res.json()
                 setError(err)
@@ -33,32 +36,35 @@ function useProvideAuth() {
         }).then((res)=>{
             setUser(res[0])
             setIsLogin(true)
+            setCookie('Author',res[0],{
+                 path:'/',
+                 expires:dateExp
+            });
         })
     }
     const signUp= (author) =>{
-        fetch(API_ROUTE+'/signUp',{
-            mode : 'cors',
-            method : 'POST',
-            headers : {
-                'Content-Type': 'application/json'
-            },
-            body : JSON.stringify(author)
-        }).then(async (res)=>{
+        postConexion('/signUp',author).then(async (res)=>{
             //return server response as text
             if (res.status >= 400) {
                 const er = await res.text()
                 setError(JSON.parse(er))
                 return;
             }
-            setUser(author);
-            setIsLogin(true);
         }).catch((err)=>{
             console.log(err);
+        }).then((res)=>{
+            setUser(res[0]);
+            setIsLogin(true);
+            setCookie('Author',res[0],{
+                path:'/'
+            })
         })
     }
     const signOut = ()=>{
-        setUser(null)
-        localStorage.removeItem('user');
+        setUser({})
+        removeCookie('Author',{
+            path:'/'
+        })
     }
     return {
         user,
@@ -71,5 +77,5 @@ function useProvideAuth() {
     }
 }
 export const useAuth = ()=>{
-    return useContext(authContex);
+    return useContext(authContext);
 }

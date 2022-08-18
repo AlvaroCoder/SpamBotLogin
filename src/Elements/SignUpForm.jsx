@@ -4,16 +4,16 @@ import FormValidation from '../Authentication/form-validation';
 import { Navigate } from 'react-router-dom';
 
 function SignUpForm() {
-    const {signUp, isLogin, error } = useAuth();
+    const { signUp, isLogin, error } = useAuth();
     
     //FakeUser
-    const user = {
+    const fakeUser = {
       nombre : '',
       email : '',
       contrasenna : '',
     }
 
-    const [inputValues, setInputValues] = useState(user);
+    const [inputValues, setInputValues] = useState(fakeUser);
     const [data, setData] = useState({});
 
     useEffect(()=>{
