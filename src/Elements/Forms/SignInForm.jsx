@@ -1,46 +1,40 @@
 import React,{useState, useEffect } from "react";
-import { useAuth } from '../Authentication/use-auth';
 import { Link, Navigate } from 'react-router-dom';
 import { gapi } from 'gapi-script'
-import GoogleLoginButton from "./GoogleLoginButton";
-import Notification from "./Notification";
+import GoogleLoginButton from "../Buttons/GoogleLoginButton";
+import Notification from "../Notification";
+import { useAuthentication, useUser, useUserError } from "../../Hooks/UserContext";
 
 const clientID = "944066342659-qd27c019faj2itkud9qh4ne0lvdh7sff.apps.googleusercontent.com"
 
 function SignInForm() {
-    const { signIn, isLogin, error } = useAuth();
-    const user = {
+    const user = useUser();
+    const auth = useAuthentication();
+    const error = useUserError();
+
+    const fakeUser = {
         email : '',
         contrasenna : '',
     }
-    const [inputValues, setInputValues] = useState(user);
-    const [data, setData] = useState({});
+    const [inputValues, setInputValues] = useState(fakeUser);
     const [Error, setError] = useState({message : ''});
-    useEffect(() => {
-        function sendData(userValues) {
-            if (userValues.email) {
-                signIn(userValues);
-            }
-        }
-        return sendData(data)
-      }, [data])
   
-    useEffect(() => {
-      function start() {
-        gapi.client.init({
-            clientId : clientID,
-            scope : ""
-        })
-      }
-      return gapi.load('client:auth2',start)
-    }, [])
+ useEffect(() => {
+   function start() {
+     gapi.client.init({
+         clientId : clientID,
+         scope : ""
+     })
+   }
+   return gapi.load('client:auth2',start)
+ }, [])
     
     const handleSubmit =(evt)=>{
         evt.preventDefault();
         if (inputValues.contrasenna !== '' && inputValues.email !== '' && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputValues.email))) {
-            setData(inputValues);
-            setError({})
-            setInputValues(user)
+            auth.signIn(inputValues);            
+            setError({message : ''})
+            setInputValues(fakeUser);
             return;
         }
         setError({
@@ -57,7 +51,7 @@ function SignInForm() {
         })
     }
 
-    if (isLogin) {
+    if (user.isLogin) {
         return <Navigate to='/'></Navigate>;
     }else{
         return <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8' onSubmit={handleSubmit}>
@@ -82,12 +76,12 @@ function SignInForm() {
                             </span>
                         </button>
                         <div className="mt-3">
-                            <GoogleLoginButton></GoogleLoginButton>
+                            <GoogleLoginButton message="Ingresa con Google"></GoogleLoginButton>
+                        </div>
+                        <div>
+                            <p>¿Aún no tienes una cuenta ?<span className="text-blue-500"><Link to='/Registrar'>Registrate</Link></span></p>
                         </div>
                         </form>
-                        <div>
-                            <p>¿ No tienes cuenta ? <span className="text-blue-500"><Link to='/Registrar'>Registrate aquí</Link></span></p>
-                        </div>
                     </div>
                 </div>;
     }

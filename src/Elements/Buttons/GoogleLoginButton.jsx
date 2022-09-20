@@ -3,7 +3,8 @@ import GoogleLogin from 'react-google-login';
 
 const ClientID = "944066342659-qd27c019faj2itkud9qh4ne0lvdh7sff.apps.googleusercontent.com"
 
-function GoogleLoginButton() {
+function GoogleLoginButton(props) {
+    const {message} = props
     const onSuccessGoogle= (res)=>{
         console.log("Success: ",res.profileObj);
     }
@@ -13,7 +14,7 @@ function GoogleLoginButton() {
     return     <GoogleLogin
             className="w-full"
             clientId={ClientID}
-            buttonText="Iniciar sesión con Google"
+            buttonText={message}
             onSuccess={onSuccessGoogle}
             onFailure={onFailureGoogle}
             cookiePolicy={'single_host_origin'}

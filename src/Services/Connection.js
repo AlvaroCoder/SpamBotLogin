@@ -1,4 +1,4 @@
-const API_ROUTE = 'http://localhost:8084/database/author';
+const API_ROUTE = process.env.REACT_APP_URL_API;
 
 export function postConexion(route,author) {
     return fetch(API_ROUTE+route,{

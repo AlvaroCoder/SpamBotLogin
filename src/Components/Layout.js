@@ -1,10 +1,8 @@
 import { NavBar } from "../Elements";
 
-export default function Layout(props) {
+export default function Layout({children}) {
     return <div>
-        <NavBar/>
-        <div>
-            {props.children}
-        </div>
-    </div>
+                <NavBar></NavBar>
+                {children}
+            </div>
 }

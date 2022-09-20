@@ -1,8 +1,11 @@
-export {default as NavBar} from './Navbar'; 
-export {default as SignUpForm} from './SignUpForm';
-export {default as SignInForm} from './SignInForm';
-export {default as FormCreate} from './FormCreate';
+export {default as NavBar} from './Navbars/Navbar'; 
+export {default as NavBarForms } from './Navbars/NavbarForms';
+export {default as SignUpForm} from './Forms/SignUpForm';
+export {default as SignInForm} from './Forms/SignInForm';
 export {default as LostPage }from './404';
-export {default as GoogleLoginButton} from './GoogleLoginButton';
+export {default as GoogleLoginButton} from './Buttons/GoogleLoginButton';
 export {default as Notification} from './Notification';
-export {default as AuthButtons} from './AuthButtons';
+export {default as AuthButtons} from './Buttons/AuthButtons';
+export {default as BoxContentPost} from './BoxContentPost';
+export {default as LoadingHome} from './Loadings/LaoadingHome';
+export {default as LoadingPage } from './Loadings/LoadingPage';

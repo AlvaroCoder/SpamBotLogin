@@ -1,9 +1,9 @@
 import {  Navigate } from "react-router-dom";
-import { useAuth } from "./Authentication/use-auth";
 import Layout from "./Components/Layout";
+import { useUser } from "./Hooks/UserContext";
 
 function UserProtected({children}) {
-  const auth = useAuth();
-  return auth.user ? <Layout children={children}></Layout> : <Navigate to='/Ingresar'></Navigate>
+  const auth = useUser();
+  return auth.isLogin ? <Layout children={children}></Layout> : <Navigate to='/Ingresar'></Navigate>
 }
 export default UserProtected;

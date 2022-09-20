@@ -4,9 +4,13 @@ import { BoxContentPost } from '../Elements';
 import { useUser } from '../Hooks/UserContext';
 import { getPostsContent } from '../Services/posts';
 
-function PostCreate() {
-    const [deContent, setDeContent] = useState('');
-    const [asunto, setAsunto] = useState('');
+function PostContent() {
+    const auth = useUser();
+    let email = auth.email
+    let {subjectemail} = useParams();
+    const title = subjectemail.split("&").join(" ");
+    const [deContent, setDeContent] = useState(email);
+    const [asunto, setAsunto] = useState(title);
     const [data, setData] = useState({});
 
     const changeAsunto=(evt)=>{
@@ -15,7 +19,18 @@ function PostCreate() {
     const changeDe=(evt)=>{
         setDeContent(evt.target.value);
     }
-
+    useEffect(() => {
+        async function fetchaData() {
+            await getPostsContent(subjectemail).then(async (val)=>{
+                if (val.ok) {
+                    return await val.json()
+                }
+            }).then((val)=>{
+                setData(val)
+            })
+        }
+        fetchaData()
+    }, [])
     
     return (
         <><nav className='w-full h-12 bg-slate-500 text-center'><p>/{asunto}</p></nav>
@@ -32,6 +47,7 @@ function PostCreate() {
                     </div>
                     <section>
                         <h1>Content</h1>
+                        <BoxContentPost content={data}></BoxContentPost>
                     </section>
                 </div>
             </div>
@@ -39,4 +55,4 @@ function PostCreate() {
     )
 }
 
-export default PostCreate;
+export default PostContent
