@@ -1,12 +1,10 @@
 import React,{useState, useEffect } from "react";
 import { Link, Navigate } from 'react-router-dom';
 import { gapi } from 'gapi-script'
-import GoogleLoginButton from "../Buttons/GoogleLoginButton";
 import Notification from "../Notification";
 import { useAuthentication, useUser, useUserError } from "../../Hooks/UserContext";
 import LoadingPage from "../Loadings/LoadingPage";
 
-const clientID = "944066342659-qd27c019faj2itkud9qh4ne0lvdh7sff.apps.googleusercontent.com"
 
 function SignInForm() {
     const {isLogin} = useUser();
@@ -82,9 +80,6 @@ function SignInForm() {
                             Ingresar
                             </span>
                         </button>
-                        <div className="mt-3">
-                            <GoogleLoginButton message="Ingresa con Google"></GoogleLoginButton>
-                        </div>
                         <div>
                             <p>¿Aún no tienes una cuenta ?<span className="text-blue-500"><Link to='/Registrar'>Registrate</Link></span></p>
                         </div>

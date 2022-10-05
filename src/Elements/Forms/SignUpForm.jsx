@@ -1,6 +1,4 @@
-
 import React,{useState,useEffect } from 'react';
-const clientID = process.env.REACT_APP_GOOGLE_ID;
 import { Link, Navigate } from 'react-router-dom';
 import Notification from '../Notification';
 import {gapi} from 'gapi-script';
