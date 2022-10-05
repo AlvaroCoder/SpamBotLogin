@@ -1,8 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { BoxContentPost, LoadingPage } from '../Elements';
 import { useUser } from '../Hooks/UserContext';
-import { createEmptyPost,getPostByIdentifierSubject } from '../Services/posts';
+import {getPostByIdentifierSubject } from '../Services/posts';
 
 function Content({ide, subj}) {
     const auth = useUser();

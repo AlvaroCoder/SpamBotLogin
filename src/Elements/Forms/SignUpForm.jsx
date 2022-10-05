@@ -27,15 +27,6 @@ function SignUpForm() {
       }
       singUpAuth()
     }, [data])
-    useEffect(() => {
-      function start() {
-        gapi.client.init({
-            clientId : clientID,
-            scope : ""
-        })
-      }
-      return gapi.load('client:auth2',start)
-    }, [])
 
     const handleSubmit = (evt)=>{
         evt.preventDefault();

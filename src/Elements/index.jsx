@@ -4,7 +4,6 @@ export {default as NavBarTop } from './Navbars/NavbarTop';
 export {default as SignUpForm} from './Forms/SignUpForm';
 export {default as SignInForm} from './Forms/SignInForm';
 export {default as LostPage }from './404';
-export {default as GoogleLoginButton} from './Buttons/GoogleLoginButton';
 export {default as Notification} from './Notification';
 export {default as AuthButtons} from './Buttons/AuthButtons';
 export {default as BoxContentPost} from './BoxContentPost';

@@ -18,15 +18,7 @@ function SignInForm() {
     const [inputValues, setInputValues] = useState(fakeUser);
     const [Error, setError] = useState({message : ''});
     const [isLoading, setIsLoading] = useState(false);
- useEffect(() => {
-   function start() {
-     gapi.client.init({
-         clientId : clientID,
-         scope : ""
-     })
-   }
-   return gapi.load('client:auth2',start)
- }, [])
+    
     
     const handleSubmit =(evt)=>{
         evt.preventDefault();
