@@ -1,11 +1,11 @@
+
 import React,{useState,useEffect } from 'react';
+const clientID = process.env.REACT_APP_GOOGLE_ID;
 import { Link, Navigate } from 'react-router-dom';
-import GoogleLoginButton from '../Buttons/GoogleLoginButton';
 import Notification from '../Notification';
 import {gapi} from 'gapi-script';
 import { useAuthentication, useUser, useUserError } from '../../Hooks/UserContext';
 import LoadingPage from '../Loadings/LoadingPage';
-const clientID = "944066342659-qd27c019faj2itkud9qh4ne0lvdh7sff.apps.googleusercontent.com"
 
 function SignUpForm() {
   const {isLogin} = useUser();
@@ -100,9 +100,6 @@ function SignUpForm() {
                                 Registrarse
                               </span>
                             </button>
-                            <div className='mt-4'>
-                              <GoogleLoginButton message="Crea una cuenta con Google"></GoogleLoginButton>
-                            </div>
                           </form>
                           <div>
                             <p>¿ Ya tienes una cuenta ?<span className='text-blue-500'><Link to='/Ingresar'>Inicia sesión</Link></span></p>
