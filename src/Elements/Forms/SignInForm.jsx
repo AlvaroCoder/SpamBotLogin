@@ -4,11 +4,12 @@ import { gapi } from 'gapi-script'
 import GoogleLoginButton from "../Buttons/GoogleLoginButton";
 import Notification from "../Notification";
 import { useAuthentication, useUser, useUserError } from "../../Hooks/UserContext";
+import LoadingPage from "../Loadings/LoadingPage";
 
 const clientID = "944066342659-qd27c019faj2itkud9qh4ne0lvdh7sff.apps.googleusercontent.com"
 
 function SignInForm() {
-    const user = useUser();
+    const {isLogin} = useUser();
     const auth = useAuthentication();
     const error = useUserError();
 
@@ -18,7 +19,7 @@ function SignInForm() {
     }
     const [inputValues, setInputValues] = useState(fakeUser);
     const [Error, setError] = useState({message : ''});
-  
+    const [isLoading, setIsLoading] = useState(false);
  useEffect(() => {
    function start() {
      gapi.client.init({
@@ -31,8 +32,10 @@ function SignInForm() {
     
     const handleSubmit =(evt)=>{
         evt.preventDefault();
+        setIsLoading(true)
         if (inputValues.contrasenna !== '' && inputValues.email !== '' && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputValues.email))) {
             auth.signIn(inputValues);            
+            
             setError({message : ''})
             setInputValues(fakeUser);
             return;
@@ -51,9 +54,13 @@ function SignInForm() {
         })
     }
 
-    if (user.isLogin) {
+    if (isLogin) {
         return <Navigate to='/'></Navigate>;
-    }else{
+    }
+    if (isLoading) {
+        return <LoadingPage/>
+    }
+    if(!isLogin){
         return <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8' onSubmit={handleSubmit}>
                     <div className='max-w-md w-full space-y-8'>
                     <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Bienvenido a SPAMBOT</h1>

@@ -4,13 +4,14 @@ import Ingresar from './Components/SignInPage';
 import Home from './Components/Home';
 import Registrar from './Components/SignUpPage';
 import UserProtected from './UserProtected';
+import Author from './Components/Author';
 import {CookiesProvider} from 'react-cookie';
-import UserContext, { useUser } from './Hooks/UserContext';
+import UserContext from './Hooks/UserContext';
 import { LostPage } from './Elements';
-import PostCreate from './Components/CreatePost';
 import PostContent from './Components/PostContent';
+import PostCreate from './Components/CreatePost';
+import Layout from './Components/Layout';
 function App() {
-  const user = useUser();
   return (
     <CookiesProvider >
         <UserContext>
@@ -23,8 +24,9 @@ function App() {
                     <Home></Home>
                   </UserProtected>
                 }></Route>
-                <Route path='/post/:subjectemail' element={<PostContent/>}></Route>
-                <Route path='/post/create' element={<PostCreate/>}></Route>
+                <Route path='/post/new/Untitled' element={<PostCreate/>}></Route>
+                <Route path='/post/:identifier/:subjectEmail' element={<PostContent/>}></Route>
+                <Route path='/author/:author' element={<Layout children={<Author/>}></Layout>}></Route>
                 <Route path='*' element={<LostPage/>}></Route>
             </Routes> 
         </UserContext>

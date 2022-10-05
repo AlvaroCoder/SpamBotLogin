@@ -1,43 +1,42 @@
 import React,{useState, useEffect} from 'react'
-import { useParams } from 'react-router-dom';
-import { BoxContentPost } from '../Elements';
+import { Link, Navigate, useParams } from 'react-router-dom';
+import { BoxContentPost, LoadingPage } from '../Elements';
 import { useUser } from '../Hooks/UserContext';
-import { getPostsContent } from '../Services/posts';
+import { createEmptyPost,getPostByIdentifierSubject } from '../Services/posts';
 
-function PostContent() {
+function Content({ide, subj}) {
     const auth = useUser();
-    let email = auth.email
-    let {subjectemail} = useParams();
-    const title = subjectemail.split("&").join(" ");
-    const [deContent, setDeContent] = useState(email);
+    const title = subj;
     const [asunto, setAsunto] = useState(title);
     const [data, setData] = useState({});
-
+    const [isLoading, setIsLoading] = useState(true);
     const changeAsunto=(evt)=>{
         setAsunto(evt.target.value)
     }
-    const changeDe=(evt)=>{
-        setDeContent(evt.target.value);
-    }
     useEffect(() => {
-        async function fetchaData() {
-            await getPostsContent(subjectemail).then(async (val)=>{
+        async function getContentPost (identifier, subjectEmail) {
+            await getPostByIdentifierSubject(identifier, subjectEmail).then((val)=>{
                 if (val.ok) {
-                    return await val.json()
+                    return val.json()
                 }
-            }).then((val)=>{
-                setData(val)
-            })
+            }).then((res)=>{
+                setData(res)
+                setIsLoading(false);
+            });
         }
-        fetchaData()
+        getContentPost(ide, subj);
     }, [])
     
     return (
-        <><nav className='w-full h-12 bg-slate-500 text-center'><p>/{asunto}</p></nav>
+        <>
+        <nav className='w-full h-12 bg-slate-500 text-center'>
+            <h1><Link to='/'>Home</Link></h1>
+            <p>/{asunto}</p>
+        </nav>
             <div className='w-full mt-5 h-screen flex justify-center'>
                 <div className='w-1/2  h-2/3 text-xl'>
                     <div className='flex flex-row'>
-                        <h1 >De : </h1><input className='w-fit ml-2' type='text' onChange={changeDe} value={deContent}></input>
+                        <h1 >De : {auth.email} </h1>
                     </div>
                     <div>
                         <h1>Para : <input className='w-fit ml-2'></input ></h1>
@@ -47,12 +46,17 @@ function PostContent() {
                     </div>
                     <section>
                         <h1>Content</h1>
-                        <BoxContentPost content={data}></BoxContentPost>
+                        <p>Estado : {data.estado}</p>
+                        {isLoading ? <p>La data se esta cargando </p> : <p>Ya se cargo la data </p>}
                     </section>
                 </div>
             </div>
         </>
     )
 }
+ function PostContent() {
+    let {identifier, subjectEmail} = useParams();
+    return <Content ide={identifier} subj={subjectEmail}/>
+}
 
-export default PostContent
+export default PostContent;

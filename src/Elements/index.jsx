@@ -1,5 +1,6 @@
 export {default as NavBar} from './Navbars/Navbar'; 
 export {default as NavBarForms } from './Navbars/NavbarForms';
+export {default as NavBarTop } from './Navbars/NavbarTop';
 export {default as SignUpForm} from './Forms/SignUpForm';
 export {default as SignInForm} from './Forms/SignInForm';
 export {default as LostPage }from './404';

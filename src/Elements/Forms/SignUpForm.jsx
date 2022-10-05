@@ -4,6 +4,7 @@ import GoogleLoginButton from '../Buttons/GoogleLoginButton';
 import Notification from '../Notification';
 import {gapi} from 'gapi-script';
 import { useAuthentication, useUser, useUserError } from '../../Hooks/UserContext';
+import LoadingPage from '../Loadings/LoadingPage';
 const clientID = "944066342659-qd27c019faj2itkud9qh4ne0lvdh7sff.apps.googleusercontent.com"
 
 function SignUpForm() {
@@ -16,11 +17,15 @@ function SignUpForm() {
       contrasenna : '',
     }
     const [inputValues, setInputValues] = useState(fakeUser);
-    const [data, setData] = useState()
+    const [data, setData] = useState(null)
     const [Error, setError] = useState({message:''})
+    const [isLoading, setisLoading] = useState(false);
     useEffect(() => {
       function singUpAuth() {
-        auth.signUp(data);
+        if (data) {
+          auth.signUp(data);
+          setisLoading(false);
+        }
       }
       singUpAuth()
     }, [data])
@@ -40,6 +45,7 @@ function SignUpForm() {
           setData(inputValues);
           setError({message : ''})
           setInputValues(fakeUser);
+          setisLoading(true);
           return;
         }
         setError({
@@ -56,9 +62,12 @@ function SignUpForm() {
       })
   }
     if (isLogin) {
-        return <Navigate to='/'></Navigate>
+      return <Navigate to='/'></Navigate>
     }
-    else{
+    if (isLoading) {
+      return <LoadingPage/>
+    }
+    if(!isLogin){
         return (
             <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8' onSubmit={handleSubmit}>
                 <div className='max-w-md w-full space-y-8'>
@@ -99,7 +108,6 @@ function SignUpForm() {
                             <p>¿ Ya tienes una cuenta ?<span className='text-blue-500'><Link to='/Ingresar'>Inicia sesión</Link></span></p>
                           </div>
                       </div>
-                      
                       </div>
         )
     }

@@ -4,7 +4,9 @@ module.exports = {
   ],
   theme: {
     extend: {
-      
+      colors : {
+        'background-nav' : "#14213D"
+      }
     },
     fontFamily:{
       'body':['"open-sans"']
